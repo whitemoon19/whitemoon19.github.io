@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>JS基础-原型与原型链 | 月与雪之间</title><meta name="keywords" content="JS"><meta name="author" content="琅月十九"><meta name="copyright" content="琅月十九"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="原型与原型链类型判断-instanceof父类：People；子类 Student 创建实例 Student xialuo 所有引用类型instanceof Object都为true 1typeof People  &#x2F;&#x2F;&amp;#x27;function&amp;#x27;   class实际是函数，可见是语法糖。即通过function实现，只是写法是class  123xialuo._proto_  &#x2F;&#x2F; P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS基础-原型与原型链">
+<meta property="og:url" content="http://example.com/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/index.html">
+<meta property="og:site_name" content="月与雪之间">
+<meta property="og:description" content="原型与原型链类型判断-instanceof父类：People；子类 Student 创建实例 Student xialuo 所有引用类型instanceof Object都为true 1typeof People  &#x2F;&#x2F;&amp;#x27;function&amp;#x27;   class实际是函数，可见是语法糖。即通过function实现，只是写法是class  123xialuo._proto_  &#x2F;&#x2F; P">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg">
+<meta property="article:published_time" content="2022-04-07T06:40:12.000Z">
+<meta property="article:modified_time" content="2022-04-07T06:41:12.151Z">
+<meta property="article:author" content="琅月十九">
+<meta property="article:tag" content="JS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JS基础-原型与原型链',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-07 14:41:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/lists/"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">月与雪之间</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/lists/"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JS基础-原型与原型链</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-07T06:40:12.000Z" title="发表于 2022-04-07 14:40:12">2022-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-07T06:41:12.151Z" title="更新于 2022-04-07 14:41:12">2022-04-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JS基础-原型与原型链"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="原型与原型链"><a href="#原型与原型链" class="headerlink" title="原型与原型链"></a>原型与原型链</h1><h3 id="类型判断-instanceof"><a href="#类型判断-instanceof" class="headerlink" title="类型判断-instanceof"></a>类型判断-instanceof</h3><p>父类：People；子类 Student</p>
+<p>创建实例 Student xialuo</p>
+<p>所有引用类型instanceof Object都为true</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="title class_">People</span>  <span class="comment">//&#x27;function&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>class实际是函数，可见是语法糖。即通过function实现，只是写法是class</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xialuo.<span class="property">_proto_</span>  <span class="comment">// People&#123;constructor:f,sayHi:f&#125; 隐式原型</span></span><br><span class="line"><span class="title class_">Student</span>.<span class="property"><span class="keyword">prototype</span></span> <span class="comment">//People&#123;constructor:f,sayHi:f&#125; 显式原型</span></span><br><span class="line">xialuo.<span class="property">_proto_</span> === <span class="title class_">Student</span>.<span class="property"><span class="keyword">prototype</span></span>  <span class="comment">//true 引用的是一个内存地址</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.assets/image-20220407110422899.png" alt="image-20220407110422899"></p>
+<h3 id="原型关系"><a href="#原型关系" class="headerlink" title="原型关系"></a>原型关系</h3><ul>
+<li><p>每个class都有显式原型prototype，类的所有方法都定义在了 prototype 属性上。</p>
+</li>
+<li><p>每个实例都有隐式原型_proto_，实例的_proto_指向对应class的prototype原型对象</p>
+</li>
+</ul>
+<h3 id="基于原型的执行规则"><a href="#基于原型的执行规则" class="headerlink" title="基于原型的执行规则"></a>基于原型的执行规则</h3><p>获取属性xialuo.name或执行方法xialuo.sayhi()，先在自身属性和方法寻找，找不到则自动去_proto_寻找</p>
+<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3><p>Student.prototype._proto_ &#x3D;&#x3D;&#x3D; People.prototype</p>
+<p><img src="/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.assets/image-20220407140119541.png" alt="image-20220407140119541"></p>
+<p>验证是本身属性还是属于原型的属性</p>
+<p>xialuo.hasOwnProperty(‘name’)   &#x2F;&#x2F;true</p>
+<p>xialuo.hasOwnProperty(‘sayHi’)   &#x2F;&#x2F;false</p>
+<h3 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h3><p>instanceof 主要的实现原理就是只要右边变量的 prototype 在左边变量的原型链上即可。因此，instanceof 在查找的过程中会遍历左边变量的原型链，直到找到右边变量的 prototype，如果查找失败，则会返回 false。</p>
+<h3 id="手写简易jQuery-考虑插件和拓展性"><a href="#手写简易jQuery-考虑插件和拓展性" class="headerlink" title="手写简易jQuery 考虑插件和拓展性"></a>手写简易jQuery 考虑插件和拓展性</h3><p>jQuery 是一个轻量级的”写的少，做的多”的 JavaScript 库。</p>
+<p>jQuery 库包含以下功能：</p>
+<ul>
+<li>HTML 元素选取</li>
+<li>HTML 元素操作</li>
+<li>CSS 操作</li>
+<li>HTML 事件函数</li>
+<li>JavaScript 特效和动画</li>
+<li>HTML DOM 遍历和修改</li>
+<li>AJAX</li>
+<li>Utilities</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">jQuery</span>&#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">selector</span>)&#123;</span><br><span class="line">        <span class="comment">//DOM元素</span></span><br><span class="line">        <span class="keyword">const</span> result = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(selector)</span><br><span class="line">        <span class="keyword">const</span> length = result.<span class="property">length</span></span><br><span class="line">        <span class="comment">//对选取出的selector进行遍历</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i =<span class="number">0</span> ; i&lt;length;i++)&#123;</span><br><span class="line">            <span class="variable language_">this</span>[i]=result[i] <span class="comment">//this是类数组，实际是个对象</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">length</span>=length</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">selector</span>=selector</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">get</span>(<span class="params">index</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>[index]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//遍历，传入一个函数</span></span><br><span class="line">    <span class="title function_">each</span>(<span class="params">fn</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="variable language_">this</span>.<span class="property">length</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">const</span> elem =<span class="variable language_">this</span>[i]</span><br><span class="line">            <span class="title function_">fn</span>(elem)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//监听方法</span></span><br><span class="line">    <span class="title function_">on</span>(<span class="params">type,fn</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="function"><span class="params">elem</span> =&gt;</span>&#123;</span><br><span class="line">            elem.<span class="title function_">addEventListener</span>(type,fn,<span class="literal">false</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//插件 往jquery原型中添加</span></span><br><span class="line">jQuery.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">dialog</span>=<span class="keyword">function</span>(<span class="params">info</span>)&#123;</span><br><span class="line">    <span class="title function_">alert</span>(info)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//造轮子 基于Jquery去造，继承</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">myJQuery</span> <span class="keyword">extends</span> <span class="title class_ inherited__">jQuery</span>&#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">selector</span>)&#123;</span><br><span class="line">        <span class="variable language_">super</span>(selector)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">addClass</span>(<span class="params">className</span>)&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">style</span>(<span class="params">data</span>)&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">琅月十九</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/">http://example.com/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">月与雪之间</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JS/">JS</a></div><div class="post_share"><div class="social-share" data-image="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E9%97%AD%E5%8C%85/"><img class="prev-cover" src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">JS基础-作用域与闭包</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/06/JS%E5%9F%BA%E7%A1%80-%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%AE%A1%E7%AE%97/"><img class="next-cover" src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JS基础-变量类型与计算</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/04/06/JS%E5%9F%BA%E7%A1%80-%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%AE%A1%E7%AE%97/" title="JS基础-变量类型与计算"><img class="cover" src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-06</div><div class="title">JS基础-变量类型与计算</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">琅月十九</div><div class="author-info__description">ENFP</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.</span> <span class="toc-text">原型与原型链</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD-instanceof"><span class="toc-number">1.0.1.</span> <span class="toc-text">类型判断-instanceof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E5%85%B3%E7%B3%BB"><span class="toc-number">1.0.2.</span> <span class="toc-text">原型关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%8E%9F%E5%9E%8B%E7%9A%84%E6%89%A7%E8%A1%8C%E8%A7%84%E5%88%99"><span class="toc-number">1.0.3.</span> <span class="toc-text">基于原型的执行规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.0.4.</span> <span class="toc-text">原型链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#instanceof"><span class="toc-number">1.0.5.</span> <span class="toc-text">instanceof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%86%99%E7%AE%80%E6%98%93jQuery-%E8%80%83%E8%99%91%E6%8F%92%E4%BB%B6%E5%92%8C%E6%8B%93%E5%B1%95%E6%80%A7"><span class="toc-number">1.0.6.</span> <span class="toc-text">手写简易jQuery 考虑插件和拓展性</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E9%97%AD%E5%8C%85/" title="JS基础-作用域与闭包"><img src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JS基础-作用域与闭包"/></a><div class="content"><a class="title" href="/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E9%97%AD%E5%8C%85/" title="JS基础-作用域与闭包">JS基础-作用域与闭包</a><time datetime="2022-04-07T06:40:38.000Z" title="发表于 2022-04-07 14:40:38">2022-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/" title="JS基础-原型与原型链"><img src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JS基础-原型与原型链"/></a><div class="content"><a class="title" href="/2022/04/07/JS%E5%9F%BA%E7%A1%80-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE/" title="JS基础-原型与原型链">JS基础-原型与原型链</a><time datetime="2022-04-07T06:40:12.000Z" title="发表于 2022-04-07 14:40:12">2022-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/06/JS%E5%9F%BA%E7%A1%80-%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%AE%A1%E7%AE%97/" title="JS基础-变量类型与计算"><img src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JS基础-变量类型与计算"/></a><div class="content"><a class="title" href="/2022/04/06/JS%E5%9F%BA%E7%A1%80-%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%AE%A1%E7%AE%97/" title="JS基础-变量类型与计算">JS基础-变量类型与计算</a><time datetime="2022-04-06T08:42:19.000Z" title="发表于 2022-04-06 16:42:19">2022-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/23/%E6%88%91%E6%9C%89%E4%B8%80%E5%BA%A7%E6%81%90%E6%80%96%E5%B1%8B/" title="我有一座恐怖屋"><img src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="我有一座恐怖屋"/></a><div class="content"><a class="title" href="/2022/03/23/%E6%88%91%E6%9C%89%E4%B8%80%E5%BA%A7%E6%81%90%E6%80%96%E5%B1%8B/" title="我有一座恐怖屋">我有一座恐怖屋</a><time datetime="2022-03-23T08:17:42.000Z" title="发表于 2022-03-23 16:17:42">2022-03-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/18/%E5%8D%8A%E6%B3%BD%E7%9B%B4%E6%A0%91/" title="半泽直树"><img src="/img/%E6%9C%88%E4%BA%AE%E5%A3%81%E7%BA%B8.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="半泽直树"/></a><div class="content"><a class="title" href="/2022/03/18/%E5%8D%8A%E6%B3%BD%E7%9B%B4%E6%A0%91/" title="半泽直树">半泽直树</a><time datetime="2022-03-18T15:25:07.573Z" title="发表于 2022-03-18 23:25:07">2022-03-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 琅月十九</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
